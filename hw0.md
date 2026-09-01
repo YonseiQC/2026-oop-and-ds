@@ -16,7 +16,7 @@ $ wsl --install -d Ubuntu-26.04
 
 After installing it, you will be able to find Ubuntu-26.04.
 
-<img src="img/ubuntu-26.04.png" alt="Run Ubuntu-24.04" style="width:30em">
+<img src="img/ubuntu-26.04.png" alt="Run Ubuntu-26.04" style="width:30em">
 
 Running it will give you the following terminal.
 
