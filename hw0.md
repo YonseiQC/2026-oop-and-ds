@@ -38,8 +38,8 @@ $ gcc-16 --version # This will give 16.X.X
 
 To make `gcc-16` the default, we need to run the following commands
 ```bash
-$ sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-13 60 --slave /usr/bin/g++ g++ /usr/bin/g++-13
-$ sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-14 40 --slave /usr/bin/g++ g++ /usr/bin/g++-14
+$ sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-15 60 --slave /usr/bin/g++ g++ /usr/bin/g++-15
+$ sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-16 40 --slave /usr/bin/g++ g++ /usr/bin/g++-16
 $ sudo update-alternatives --config gcc
 ```
 
@@ -61,14 +61,14 @@ Type the number which is for `gcc-16`. For example, for the above case, Selectio
 After that, we will get
 ```bash
 $ gcc --version
-gcc (Ubuntu 14.2.0-4ubuntu2~24.04) 14.2.0
-Copyright (C) 2024 Free Software Foundation, Inc.
+gcc (Ubuntu 16-20260322-1ubuntu1) 16.0.1 20260322 (experimental) [trunk r16-8246-g569ace1fa50]
+Copyright (C) 2026 Free Software Foundation, Inc.
 This is free software; see the source for copying conditions.  There is NO
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 $ g++ --version
-g++ (Ubuntu 14.2.0-4ubuntu2~24.04) 14.2.0
-Copyright (C) 2024 Free Software Foundation, Inc.
+g++ (Ubuntu 15.2.0-16ubuntu1) 15.2.0
+Copyright (C) 2025 Free Software Foundation, Inc.
 This is free software; see the source for copying conditions.  There is NO
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 ```
