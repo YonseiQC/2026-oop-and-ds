@@ -11,7 +11,7 @@ int main() {
 	std::cout << '\n';
 
 	char str2[255] = "This is also string";
-	for(char* it = str2; *it != '\0'; ++it) {
+	for(char* it = std::begin(str2); it != std::end(str2); ++it) {
 		std::cout << *it << ", ";
 	}
 	std::cout << '\n';

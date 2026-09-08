@@ -6,8 +6,10 @@ int main() {
 	const int * const pt = &arr[2];
 
 	// pointer const
+	// *pt1 = 5; -> impossible as pt1 is const int*
 	*pt2 = 4;
-	++pt2;
+	// ++pt2;
+	++pt1;
 	std::cout << arr[1] << '\n';
 
 	return 0;

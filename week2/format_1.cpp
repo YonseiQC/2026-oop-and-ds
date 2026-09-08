@@ -1,4 +1,5 @@
 #include <format>
+#include <print>
 #include <iostream>
 
 int main() {
@@ -8,10 +9,10 @@ int main() {
 	std::cout << std::format("{:f} is one point zero\n", 1.0);
 	std::cout << std::format("{:.3f} is one point zero\n", 1.0);
 
-	std::cout << std::format("{:04d} is one\n", 1); 
+	std::println("{:04d} is one", 1); 
 	
 	// The following line raises compile error!
-	std::cout << std::format("{:d} is one\n", 1.23);
+	// std::cout << std::format("{:d} is one\n", 1.23);
 
 	return 0;
 }
