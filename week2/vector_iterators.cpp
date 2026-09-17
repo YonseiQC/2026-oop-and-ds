@@ -27,6 +27,8 @@ int main() {
 	auto it = std::begin(v);
 	// we can change the value it refers to
 	*it = 10;
+	++it;
+	*it = 9;
 	std::cout << format_vector(v) << '\n';
 
 	auto cit = std::cbegin(v);

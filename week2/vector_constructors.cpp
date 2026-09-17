@@ -1,5 +1,6 @@
 #include <vector>
 #include <string>
+#include <iostream>
 
 int main() {
 	// initialization list
@@ -9,5 +10,8 @@ int main() {
 	// using iterators
 	std::string str = "Hello, world!";
 	std::vector<char> v3(std::begin(str), std::end(str));
+
+	int a[5] = {0,1,2,3,4};
+	std::vector<int> v4(&a[0], &a[5]);
 	return 0;
 }

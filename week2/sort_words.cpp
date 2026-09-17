@@ -9,6 +9,10 @@
  *
  * (a < b) == true
  */
+// This is wrong!
+// "abc" < "adef"
+// this is correct:
+// std::string("abc") < std::string("adef")
 
 int main() {
 	std::vector<std::string> words;
@@ -16,11 +20,9 @@ int main() {
 	while(!std::cin.eof()) {
 		std::string line;
 		std::cin >> line;
-
 		if(line.empty()) {
 			break;
 		}
-
 		if (line[line.length()-1] == '\n') {
 			line.erase(line.length()-1);
 		}

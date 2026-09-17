@@ -22,11 +22,14 @@ std::string format_vector(const std::vector<int>& vec) {
 int main() {
 	std::vector<int> arr = {5, 3, 1, 0, 8, 9, 10};
 
-	auto descending = [](int a, int b) -> bool {
-		return a > b;
-	};
-
-	std::sort(std::begin(arr), std::end(arr), descending); // descending order
+	int c = 4;
+	std::sort(std::begin(arr), std::end(arr), [=](int a, int b) -> bool {
+		if (a > c && b > c) {
+			return a > b;
+		} else {
+			return a < b;
+		}
+	}); // descending order
 	std::cout << format_vector(arr) << '\n'; 
 
 	return 0;
