@@ -1,6 +1,69 @@
 #include <cstdlib>
 #include <iostream>
 
+class DynamicArrayConstIterator {
+private:
+	int* ptr_;
+	int idx_;
+
+public:
+	DynamicArrayConstIterator(int* ptr, int idx)
+		: ptr_{ptr}, idx_{idx} {
+	}
+	DynamicArrayConstIterator& operator++() {
+		idx_ += 1;
+		return *this;
+	}
+
+	DynamicArrayConstIterator& operator--(){
+		idx_ += 1;
+		return *this;
+	}
+
+	bool operator==(const DynamicArrayConstIterator& rhs) {
+		return ptr_ == rhs.ptr_ && idx_ == rhs.idx_;
+	}
+
+	bool operator!=(const DynamicArrayConstIterator& rhs) {
+		return !(*this == rhs);
+	}
+
+	const int& operator*() {
+		return ptr_[idx_];
+	}
+};
+class DynamicArrayIterator {
+private:
+	int* ptr_;
+	int idx_;
+
+public:
+	DynamicArrayIterator(int* ptr, int idx)
+		: ptr_{ptr}, idx_{idx} {
+	}
+	DynamicArrayIterator& operator++() {
+		idx_ += 1;
+		return *this;
+	}
+
+	DynamicArrayIterator& operator--(){
+		idx_ += 1;
+		return *this;
+	}
+
+	bool operator==(const DynamicArrayIterator& rhs) {
+		return ptr_ == rhs.ptr_ && idx_ == rhs.idx_;
+	}
+
+	bool operator!=(const DynamicArrayIterator& rhs) {
+		return !(*this == rhs);
+	}
+
+	int& operator*() {
+		return ptr_[idx_];
+	}
+};
+
 class DynamicArray {
 private:
 	int* ptr_;
@@ -17,7 +80,7 @@ private:
 	}
 
 public:
-	DynamicArray(int capacity = 16) : length_(0), capacity_(capacity) {
+	explicit DynamicArray(int capacity = 16) : length_(0), capacity_(capacity) {
 		ptr_ = new int[capacity];
 	}
 
@@ -29,7 +92,30 @@ public:
 		// Don't forget to initialize all member variables!!
 	}
 
-	DynamicArray& operator=(const DynamicArray& other) { // copy assignment operator
+	~DynamicArray() {
+		delete[] ptr_;
+	}
+
+	DynamicArrayIterator begin() {
+		return DynamicArrayIterator(ptr_, 0);
+	}
+
+	DynamicArrayIterator end() {
+		return DynamicArrayIterator(ptr_, length_);
+	}
+
+	DynamicArrayConstIterator begin() const {
+		return DynamicArrayConstIterator(ptr_, 0);
+	}
+
+	DynamicArrayConstIterator end() const {
+		return DynamicArrayConstIterator(ptr_, length_);
+	}
+
+	// Copy assignment operator
+	DynamicArray& operator=(const DynamicArray& other) {
+		if(this == &other)
+			return *this;
 		delete[] ptr_;
 
 		length_ = other.length_;
@@ -40,11 +126,11 @@ public:
 		return *this;
 	}
 
-	int get_capacity() {
+	int get_capacity() const {
 		return capacity_;
 	}
 
-	int get_length() {
+	int get_length() const {
 		return length_;
 	}
 
@@ -55,13 +141,16 @@ public:
 		ptr_[length_++] = val;
 	}
 
-	int get_elt(int idx) {
+	int& operator[](size_t idx) {
 		return ptr_[idx];
 	}
 
-	~DynamicArray() {
-		delete[] ptr_;
+	const int& operator[](size_t idx) const {
+		return ptr_[idx];
 	}
+
+	using iterator = DynamicArrayIterator;
+	using const_iterator = DynamicArrayConstIterator;
 };
 /* Encapsulation */
 
@@ -71,30 +160,13 @@ int main() {
 	for (int i = 0; i < 100; i++) {
 		arr.add_elt(i);
 	}
-	
-	DynamicArray arr2 = arr; // calling a copy constructor
-	
-	DynamicArray arr3 = arr2;
-	arr3 = arr2; // calling a copy assignment operator
-	
-	std::cout << "arr2[0]: " << arr2.get_elt(0) << '\n';
-	arr3.add_elt(3); // This must not change arr2
-	std::cout << "arr2[0]: " << arr2.get_elt(0) << '\n';
 
-	arr3 = arr2 = arr;
-
-	/*
-	std::cout << arr.get_capacity() << '\n'; // prints 10
-	for(int i = 0; i < 100; i++) {
-		arr.add_elt(i);
+	for(auto val: arr) {
+		std::cout << val << ',';
 	}
 
-	for(int i = 0; i < 100; i++) {
-		std::cout << arr.get_elt(i) << '\t';
-	}
-	std::cout << "New capacity: " << arr.get_capacity() << '\n';
-	std::cout << '\n';
-	*/
-
+	std::transform(std::begin(arr), std::end(arr), std::begin(arr), [](int val) {
+		return val + 10;
+	})
 	return 0;
 }

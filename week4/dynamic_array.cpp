@@ -1,5 +1,6 @@
 #include <cstdlib>
 #include <iostream>
+#include <vector>
 
 class DynamicArray {
 private:
@@ -17,11 +18,11 @@ private:
 	}
 
 public:
-	int get_capacity() {
+	int get_capacity() const {
 		return capacity_;
 	}
 
-	int get_length() {
+	int get_length() const {
 		return length_;
 	}
 
@@ -32,11 +33,15 @@ public:
 		ptr_[length_++] = val;
 	}
 
-	int get_elt(int idx) {
+	inline const int& operator[](int idx) const {
 		return ptr_[idx];
 	}
 
-	DynamicArray(int capacity = 16) : length_(0), capacity_(capacity) {
+	inline int& operator[](int idx) {
+		return ptr_[idx];
+	}
+
+	explicit DynamicArray(int capacity = 16) : length_(0), capacity_(capacity) {
 		ptr_ = (int*)malloc(sizeof(int) * capacity);
 	}
 
@@ -44,8 +49,21 @@ public:
 		free(ptr_);
 	}
 };
-/* Encapsulation */
 
+std::basic_ostream<char>& operator<<(std::basic_ostream<char>& os, const DynamicArray& arr) {
+	os << '[';
+	for(int i = 0; i < arr.get_length(); i++) {
+		if(i != arr.get_length()-1) {
+			os << arr[i] << ", ";
+		} else {
+			os << arr[i];
+		}
+	}
+	os << ']';
+	return os;
+}
+
+/* Encapsulation */
 int main() {
 	DynamicArray arr(10); // make dynamic array with capacity = 10
 	std::cout << arr.get_capacity() << '\n'; // prints 10
@@ -53,11 +71,10 @@ int main() {
 		arr.add_elt(i);
 	}
 
-	for(int i = 0; i < 100; i++) {
-		std::cout << arr.get_elt(i) << '\t';
-	}
 	std::cout << "New capacity: " << arr.get_capacity() << '\n';
 	std::cout << '\n';
+
+	std::cout << arr << '\n';
 
 	return 0;
 }
