@@ -41,14 +41,31 @@ public:
 	DynamicArrayIterator(int* ptr, int idx)
 		: ptr_{ptr}, idx_{idx} {
 	}
+
 	DynamicArrayIterator& operator++() {
+		// called when ++it
 		idx_ += 1;
 		return *this;
 	}
 
+	DynamicArrayIterator operator++(int) {
+		// called when it++
+		DynamicArrayIterator it(*this);
+		++(*this);
+		return it;
+	}
+
 	DynamicArrayIterator& operator--(){
+		// called when --it
 		idx_ += 1;
 		return *this;
+	}
+
+	DynamicArrayIterator operator--(int){
+		// called when it--
+		DynamicArrayIterator it(*this);
+		--(*this);
+		return it;
 	}
 
 	bool operator==(const DynamicArrayIterator& rhs) {
@@ -96,20 +113,20 @@ public:
 		delete[] ptr_;
 	}
 
-	DynamicArrayIterator begin() {
-		return DynamicArrayIterator(ptr_, 0);
+	int* begin() {
+		return ptr_;
 	}
 
-	DynamicArrayIterator end() {
-		return DynamicArrayIterator(ptr_, length_);
+	int* end() {
+		return ptr_ + length_;
 	}
 
-	DynamicArrayConstIterator begin() const {
-		return DynamicArrayConstIterator(ptr_, 0);
+	const int* begin() const {
+		return ptr_;
 	}
 
-	DynamicArrayConstIterator end() const {
-		return DynamicArrayConstIterator(ptr_, length_);
+	const int* end() const {
+		return ptr_ + length_;
 	}
 
 	// Copy assignment operator
