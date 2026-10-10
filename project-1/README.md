@@ -1,0 +1,213 @@
+# Simple ORM
+
+In this project, you are asked to implement a simple ORM where data is saved in `json` format.
+
+You are allowed to use AI models (e.g., ChatGPT, Claude, Gemini, GitHub Copilot) for this project. However, you are responsible for everything you submit.
+
+## Requirements
+
+### `DBManager<T>` class
+You are asked to design a `DBManager<T>` class that has the following member functions.
+```cpp
+template<typename T>
+class DBManager {
+public:
+    // ...
+    static void save(); // saves all objects to the json file
+    static void load(); // loads the json file
+};
+```
+The `json` filename is `"T::name()" + ".json"` (e.g., if `T::name()` is `Student`, it is `Student.json`).
+
+`DBManager<T>::save()` iterates over all `T` instances in memory and saves each one that is not already in the file.
+
+The `json` file stores one object per line. For example, `Student.json` can be
+```
+{"student_id": "2028140080", "student_name": "Kim Hajun"}
+{"student_id": "2028140081", "student_name": "Yun Jia"}
+{"student_id": "2028140082", "student_name": "Minami Sang"}
+```
+
+
+### Users should be able to define a new DB table
+
+```cpp
+struct Student : public DBTableType {
+    StringType student_id_{"student_id"};
+    StringType student_name_{"student_name"};
+
+    Student() : DBTableType(PrimaryKey(&student_id_), &student_name_) {}
+    constexpr static std::string_view name() {
+        return "Student";
+    }
+};
+
+int main() {
+    // ...
+    Student* student = DBManager<Student>::create();
+    student->student_id_ = "2028140083";
+    student->student_name_ = "Hong gil-dong";
+    student->save(); // appends {"student_id": "2028140083", "student_name": "Hong gil-dong"} to "Student.json" file
+    // ...
+}
+```
+
+Objects of a table can only be created through `DBManager<T>::create()` (or loaded through `DBManager<T>::search()`). Creating them in any other way must not compile:
+
+```cpp
+Student student;              // compile error
+Student* p = new Student();   // compile error
+```
+
+### Retrieve an object using its key
+
+```cpp
+Student* student = DBManager<Student>::search("2028140083");
+std::cout << student->student_name_ << '\n'; // prints "Hong gil-dong"
+```
+
+If there is no object with the given key, `search` returns `nullptr`.
+
+`DBManager` owns every object returned by `create` and `search`, so you must not `delete` them; the pointers stay valid until the program ends.
+If the object with the given key is already in memory, `search` returns that same object (even if it has not been saved yet) instead of loading a second copy from the file.
+
+### Saving foreign fields
+
+```cpp
+struct Class : public DBTableType {
+    IntType id_ = DBManager<Class>::get_next_key("id");
+    StringType class_name_{"class_name"};
+    ForeignKeyVector students_{"students"};
+
+    Class() : DBTableType(PrimaryKey(&id_), &class_name_, &students_) {}
+    constexpr static std::string_view name() {
+        return "Class";
+    }
+};
+```
+
+`DBManager<Class>::get_next_key("id")` returns an `IntType` named `"id"` whose value is one larger than the largest `id` saved in `Class.json` (or `1` if there is none), and each call returns a new value.
+
+Then,
+
+```cpp
+auto* student = DBManager<Student>::search("2028140083");
+auto* cls = DBManager<Class>::create();
+cls->class_name_ = "OOP and DS";
+cls->students_.push_back(student);
+cls->save();
+```
+
+saves the following line to `Class.json` (if classes with ids 1 to 3 are already saved):
+
+```
+{"id": 4, "class_name": "OOP and DS", "students": ["2028140083", ...]}
+```
+
+Note that we only want to save the key of each student.
+
+### Retrieving foreign fields
+
+The saved keys do not say which table they belong to, so you name the table when reading them back:
+
+```cpp
+auto* cls = DBManager<Class>::search(4);
+for (Student* student : cls->students_.get<Student>()) {
+    std::cout << student->student_name_ << '\n'; // prints "Hong gil-dong"
+}
+```
+
+`get<Student>()` returns a `std::vector<Student*>`, loading each student with `DBManager<Student>::search` if it is not already in memory.
+
+### Advanced search and order
+
+The following should work.
+```cpp
+Result<Student> students = 
+    DBManager<Student>::search("student_name", AND(GREATER_THAN_OR_EQUAL_TO("Go Yuri"), LESS_THAN_OR_EQUAL_TO("Huh June"))).
+    order_by("student_id", Ordering::Descending);
+
+for(Student* student: students) {
+    std::cout << student->student_name_ << '\n';
+}
+```
+
+`students` is a `Result<Student>`, which is iterable. The following comparison and logical operators should be supported:
+- `GREATER_THAN`
+- `LESS_THAN`
+- `GREATER_THAN_OR_EQUAL_TO`
+- `LESS_THAN_OR_EQUAL_TO`
+- `AND`
+- `OR`
+- `NOT`
+
+With `order_by`, `Ordering::Descending` and `Ordering::Ascending` are the only two options.
+
+## Submission
+Submit a single `zip` file to LearnUs.
+
+The `zip` file is used directly by the test code through CMake's `FetchContent`, without any modification:
+
+```cmake
+include(FetchContent)
+FetchContent_Declare(
+    simple_orm
+    URL ${CMAKE_CURRENT_SOURCE_DIR}/submission.zip
+    DOWNLOAD_EXTRACT_TIMESTAMP TRUE
+)
+FetchContent_MakeAvailable(simple_orm)
+
+add_executable(test_orm test_orm.cpp)
+target_link_libraries(test_orm PRIVATE simple_orm)
+```
+
+So your `zip` file must satisfy the following:
+- `CMakeLists.txt` is at the root of the `zip` file (or inside a single top-level directory).
+- It defines a library target named exactly `simple_orm`, which requires C++20. The library can be header-only (`INTERFACE`) or have source files (`STATIC`).
+- The test code includes your library with `#include "simple_orm.hpp"`, so `simple_orm.hpp` must be in the include directories of the `simple_orm` target.
+- Your own `main` function, tests, or examples must not be built when the project is used through `FetchContent`. Build them only if `PROJECT_IS_TOP_LEVEL` is true.
+- The project must build without network access, so do not fetch other dependencies.
+
+> [!CAUTION]
+> **If the test code fails to configure or compile with your `zip` file through CMake as described above, your score is 0, with no exceptions.** Before submitting, check that your `zip` file builds with the test setup above.
+
+For example, a header-only submission can be structured as follows:
+
+```
+submission.zip
+├── CMakeLists.txt
+└── include/
+    └── simple_orm.hpp
+```
+
+```cmake
+cmake_minimum_required(VERSION 3.24)
+project(simple_orm LANGUAGES CXX)
+
+add_library(simple_orm INTERFACE)
+target_include_directories(simple_orm INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_compile_features(simple_orm INTERFACE cxx_std_20)
+
+if(PROJECT_IS_TOP_LEVEL)
+    # your own tests or examples go here
+endif()
+```
+
+
+## Evaluation
+You are asked to cover all possible edge cases. Also, the speed of saving, loading, and searching will be taken into account.
+
+Some examples of edge cases (this list is not exhaustive):
+- `T.json` does not exist yet, or is empty.
+- A string field contains special characters such as `"`, `\`, a newline, or non-ASCII text (e.g., `"홍길동"`).
+- An `IntType` field holds a negative number or a large value (e.g., `-1`, `9223372036854775807`).
+- `search` is called with a key that does not exist; it must return `nullptr`.
+- `search` is called twice with the same key; both calls must return the same object.
+- An object is created but not saved, and then searched by its key.
+- The same object is saved more than once, or its fields are changed after it has been saved.
+- `search` fails or loads an object; this must not use up a key from `get_next_key`.
+- A `ForeignKeyVector` is empty, or contains the same object more than once.
+- A `ForeignKeyVector` contains a key whose object is no longer in the referenced table.
+- An advanced search matches no objects, or matches every object.
+
+All `json` files should be valid. You can check their validity using `jq`.
