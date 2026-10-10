@@ -65,7 +65,7 @@ int main() {
 	Complex val1(3.0, 4.0); // 3.0 + 4.0 I
 	Complex val2(-2.8, 1.3); // -2.8 + 1.3 I
 	
-	Complex val = val1 + val2;
+	Complex val = val1 + 3.0;
 
 	std::cout << val << '\n';
 	return 0;
