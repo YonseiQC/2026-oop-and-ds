@@ -59,6 +59,14 @@ Student student;              // compile error
 Student* p = new Student();   // compile error
 ```
 
+### Supported fields
+The following fields should be supported:
+
+* IntType (for `std::int64_t`)
+* FloatType (for `double`)
+* StringType (for `std::string`)
+* DateType (for `std::chrono::year_month_day`)
+
 ### Retrieve an object using its key
 
 ```cpp
