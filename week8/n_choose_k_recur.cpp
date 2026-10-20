@@ -39,7 +39,6 @@ public:
 	const std::vector<std::vector<int>>& result() const {
 		return res_;
 	}
-
 };
 
 int main() {
