@@ -222,15 +222,17 @@ int main() {
 
 	auto market = tree.add_node(demos, "market");
 
-	//std::cout << std::format("Height of the tree: {}\n", height2(tree, root));
+	std::cout << std::format("Height of the tree: {}\n", height2(tree, root));
 
 	/*
 	std::cout << "Preorder traversal: \n";
-	postorder(tree.root());
+	preorder(tree.root());
+	*/
 	std::cout << "Postorder traversal: \n";
 	postorder(tree.root());
-	*/
+	/*
 	std::cout << "Breadth-first traversal: \n";
 	bfs(tree.root());
+	*/
 	return 0;
 }
