@@ -1,7 +1,5 @@
 # Project 2: Mini Spreadsheet
 
-> Draft assignment. The API, limits, and grading weights below are proposed defaults for instructor review.
-
 In this project, you will implement a spreadsheet engine in C++20. A cell may contain a number or a formula referring to other cells. When a cell changes, the engine must update dependent results correctly and efficiently.
 
 You are allowed to use AI models, including ChatGPT, Claude, Gemini, and GitHub Copilot. However, you are responsible for everything you submit. Your submission must include tests and a short explanation of your design and verification process.
