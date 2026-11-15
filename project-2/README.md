@@ -358,7 +358,7 @@ The tests stay within these bounds:
 
 Tests may include malformed inputs and cyclic edits within these size bounds. Behavior for inputs exceeding the size bounds is not tested; invalid addresses remain governed by Section 3. Tests will not require every maximum to occur together.
 
-Performance cases will include repeated cached reads, many independent formulas, long dependency chains, shared dependencies, and repeated local edits. Recursive graph algorithms must handle the stated chain length without relying on an unusually large process stack. No fixed millisecond threshold is specified in this draft.
+Performance cases will include repeated cached reads, many independent formulas, long dependency chains, shared dependencies, and repeated local edits. Recursive graph algorithms must handle the stated chain length without relying on an unusually large process stack.
 
 ## 9. Complete usage example
 
