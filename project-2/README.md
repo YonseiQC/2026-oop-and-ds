@@ -2,7 +2,7 @@
 
 In this project, you will implement a spreadsheet engine in C++20. A cell may contain a number or a formula referring to other cells. When a cell changes, the engine must update dependent results correctly and efficiently.
 
-You are allowed to use AI models, including ChatGPT, Claude, Gemini, and GitHub Copilot. However, you are responsible for everything you submit. Your submission must include tests and a short explanation of your design and verification process.
+You are allowed to use AI models, including ChatGPT, Claude, Gemini, and GitHub Copilot. However, you are responsible for everything you submit. **Your submission must include tests.**
 
 The main challenge is maintaining consistency as formulas are added, replaced, cleared, rejected, and evaluated. Implementing an expression evaluator alone is not sufficient.
 
@@ -407,7 +407,7 @@ int main() {
 
 Passing this example is necessary but not sufficient. Hidden tests exercise combinations and longer operation sequences using only the specified interface and behavior.
 
-## 10. Testing and development record
+## 10. Testing
 
 Submit automated tests that cover sequences of operations, not only isolated formulas.
 
@@ -425,17 +425,6 @@ Your tests should cover at least these categories:
 Include a small randomized test driver with a fixed, reported seed. It must generate operation sequences and compare your implementation against a simple reference model for small sheets. The reference model may reevaluate everything and rebuild the dependency graph after each edit. It must not simply call your production evaluator as its oracle. You may implement this test-only model in C++ or Python using the standard library.
 
 At minimum, randomized checks must compare values/errors, stored source, `size()`, and acceptance or rejection of edits. Check evaluation-counter behavior separately with targeted deterministic tests. Generate some invalid edits as well as valid edits.
-
-Include a `REPORT.md` explaining:
-
-- Your cell representation, expression representation, graph direction, cache state, and ownership decisions.
-- How you check cycles and preserve state when an edit fails.
-- Time and space complexity of the major operations, including range expansion.
-- How the randomized reference model differs from the production implementation.
-- Up to three actual bugs found during development, with a short reproducing sequence, cause, fix, and regression test. If fewer bugs were found, report that honestly and discuss additional adversarial cases you checked.
-- Whether and how you used AI tools. For AI-assisted work, describe a concrete suggestion you verified, corrected, or rejected and the evidence used. Full chat transcripts and a minimum number of prompts are not required. Students who did not use AI should say so and describe their verification process.
-
-The quality of your reasoning and evidence matters. The number of prompts or amount of generated code does not.
 
 ## 11. Submission
 
@@ -465,7 +454,7 @@ Your ZIP must satisfy the following:
 - The library may be header-only (`INTERFACE`) or compiled (`STATIC`).
 - The project builds without network access and does not fetch dependencies.
 - Your tests, examples, and any executable containing `main` are built only when `PROJECT_IS_TOP_LEVEL` is true.
-- Include your automated tests, randomized test driver, reference model, and `REPORT.md`, with commands for running them.
+- Include your automated tests, randomized test driver, and reference model, with commands for running them (for example, in a short `README.md`).
 
 For example, a header-only library can use:
 
